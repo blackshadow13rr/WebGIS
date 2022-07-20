@@ -40,32 +40,56 @@
             </el-icon>
             <span>疫情</span>
           </template>
-          <el-menu-item-group title="Group One">
             <el-menu-item index="/Home/Monitor">疫情监控</el-menu-item>
-            <el-menu-item index="b">b</el-menu-item>
-          </el-menu-item-group>
+            <el-menu-item index="/Home/Monitor">信息统计</el-menu-item>
+            <el-menu-item index="/Home/Monitor">活动轨迹</el-menu-item>
         </el-sub-menu>
-        <el-sub-menu index="2">
+        <el-sub-menu index="map">
           <template #title>
             <el-icon>
               <map-location />
             </el-icon>
             <span>地图</span>
           </template>
-            <el-menu-item index="/Home/Map">基础地图</el-menu-item>
-            <el-menu-item index="/Home/Route">路径分析</el-menu-item>
+          <el-menu-item index="/Home/Map">基础地图</el-menu-item>
+          <el-menu-item index="/Home/Route">路径分析</el-menu-item>
         </el-sub-menu>
-        <el-menu-item index="/Home/Supply">
-          <el-icon>
-            <shopping-cart-full />
-          </el-icon>
-          <span>物资管理</span>
-        </el-menu-item>
+        <el-sub-menu index="supply">
+          <template #title>
+            <el-icon>
+              <shopping-cart-full />
+            </el-icon>
+            <span>物资</span>
+          </template>
+          <el-menu-item index="/Home/Supply">
+            <span>订单管理</span>
+          </el-menu-item>
+          <el-menu-item index="/Home/Supply">
+            <span>物资调度</span>
+          </el-menu-item>
+          <el-menu-item index="/Home/Supply">
+            <span>物资地图</span>
+          </el-menu-item>
+        </el-sub-menu>
+        <el-sub-menu index="hospital">
+          <template #title>
+            <el-icon>
+              <FirstAidKit />
+            </el-icon>
+            <span>医院</span>
+          </template>
+          <el-menu-item index="/Home/Hospital">
+            <span>医院查询</span>
+          </el-menu-item>
+          <el-menu-item index="/Home/Hospital">
+            <span>人员调度</span>
+          </el-menu-item>
+        </el-sub-menu>
         <el-menu-item index="/Home/Admin" disabled>
           <el-icon>
             <tickets />
           </el-icon>
-          <span>Navigator Three</span>
+          <span>管理界面</span>
         </el-menu-item>
         <el-sub-menu index="">
           <template #title>
@@ -152,6 +176,7 @@ import {
   Operation,
   CaretLeft,
   CaretRight,
+  FirstAidKit,
 } from "@element-plus/icons-vue";
 
 export default {
@@ -165,6 +190,7 @@ export default {
     Operation,
     CaretLeft,
     CaretRight,
+    FirstAidKit,
   },
   setup() {
     let $store = useStore();
@@ -181,12 +207,12 @@ export default {
       isLeftMenuCollapse: false,
       activeIndex1: "1",
     });
-    /* onBeforeMount(() => {
+    onBeforeMount(() => {
             let token = getCookie("token");
             if (!token) {
                 router.push("/login")
             }
-        }) */
+        })
     let GetColor = computed(() => {
       //获取颜色数组
       return $store.getters["getColors"];

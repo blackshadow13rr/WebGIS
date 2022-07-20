@@ -1,12 +1,13 @@
 <template>
-  <div id="MapView"></div>
+  <div class="Container">
+  </div>  
 </template>
 
 <script>
 import { loadModules } from "esri-loader";
 import("../../../public/4.16/esri/themes/light/main.css");
 export default {
-  name: "MapView",
+  name: "Hospital",
   methods: {
     createView() {
       var options = {
@@ -46,7 +47,7 @@ export default {
               basemap: "osm",
             });
             var view = new MapView({
-              container: "MapView",
+              container: "Container",
               map: map,
               center: [104.08, 30.68],
               zoom: 13,
@@ -182,11 +183,11 @@ export default {
       this.view.container = null;
     }
   },
-};
+}
 </script>
 
-<style scoped>
-#MapView {
+<style>
+#Container {
   padding: 0;
   margin: 0;
   width: 100%;

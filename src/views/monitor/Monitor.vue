@@ -1,12 +1,14 @@
 <template>
-  <div id="MapView"></div>
+  <div id="Container">
+
+  </div>  
 </template>
 
 <script>
 import { loadModules } from "esri-loader";
 import("../../../public/4.16/esri/themes/light/main.css");
 export default {
-  name: "MapView",
+  name: "Monitor",
   methods: {
     createView() {
       var options = {
@@ -42,11 +44,19 @@ export default {
           ]) => {
             esriConfig.apiKey =
               "AAPK37853f2d8fd242f6ad9df392845bb0855YYrv-aaUh64MrNqmp51tQ6FZBa-YBx9mlRhkoWfEq0QOAMSzDrRbVxMEBBRfVXV";
+
+            // var layer = new TileLayer({
+            //   url: "https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetGray/MapServer",
+            // });
+            // var customBasemap = new Basemap({
+            //   baselayers: [layer],
+            // });
+
             var map = new Map({
               basemap: "osm",
             });
             var view = new MapView({
-              container: "MapView",
+              container: "Container",
               map: map,
               center: [104.08, 30.68],
               zoom: 13,
@@ -67,58 +77,7 @@ export default {
             };
             popup.defaultPopupTemplateEnabled = true;
 
-            //控制图层显示或隐藏
-            var layerList = new LayerList({
-              view: view,
-              listItemCreatedFunction: (e) => {
-                let item = e.item;
-                if (item.title.match(/.+NucleicacidTest/g)) {
-                  item.title = "核酸检测点";
-                }
-                if (item.title.match(/.+XYsm/g)) {
-                  item.title = "超市";
-                }
-                if (item.title.match(/.+XYhos/g)) {
-                  item.title = "医院";
-                }
-              },
-            });
-            view.ui.add(layerList, "bottom-right");
-
-            //分别添加图层
-            var supermarketLayer = new FeatureLayer({
-              url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/3",
-            });
-            map.add(supermarketLayer);
-            var hospitalLayer = new FeatureLayer({
-              url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/2",
-            });
-            map.add(hospitalLayer);
-            var nucleicacidTestLayer = new FeatureLayer({
-              url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/4",
-            });
-            map.add(nucleicacidTestLayer);
-            //搜索图层
-            var searchWidget = new Search({
-                view: view,
-                sources: [{
-                    layer: new FeatureLayer({
-                        url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/3"
-                    }),
-                    maxResults: 100,
-                }, {
-                    layer: new FeatureLayer({
-                        url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/2"
-                    })
-                }]
-
-            });
-            // Adds the search widget below other elements in
-            // the top left corner of the view
-            view.ui.add(searchWidget, {
-                position: "top-right",
-                index: 2
-            });
+            
             //添加动态特效
             let highlight;
             let lastUid;
@@ -147,7 +106,7 @@ export default {
                 response.results.length &&
                 (response.results[0].graphic.layer === supermarketLayer ||
                   response.results[0].graphic.layer === hospitalLayer ||
-                  response.results[0].graphic.layer === nucleicacidTestLayer)
+                  response.results[0].graphic.layer === roadsLayer)
               ) {
                 graphic = response.results[0].graphic;
               }
@@ -186,7 +145,7 @@ export default {
 </script>
 
 <style scoped>
-#MapView {
+#Container {
   padding: 0;
   margin: 0;
   width: 100%;

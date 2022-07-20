@@ -63,3 +63,24 @@ export let ListCourse = async(params) => {
     let results = await $get("Course/List", params);
     return results;
 }
+
+export let Register = async(RegData) => {
+    let password = md5(RegData.loginPwd);
+    let username = RegData.loginUser;
+    let role = RegData.role;
+    let requestParam = {
+        loginPwd: password,
+        loginUser: username,
+        role: role,
+    };
+    let { statusCode, msg } = await $post("/Admin/Register", requestParam);
+    let status = 0;
+    if (statusCode === 0) {
+        $EleMsgNotifyError(msg);
+    } else if (statusCode === 4) {
+        $EleMsgNotifyError(msg);
+    } else if (statusCode === 200) {
+        status = 1
+    }
+    return status;
+}

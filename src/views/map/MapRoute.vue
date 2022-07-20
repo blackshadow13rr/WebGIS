@@ -22,6 +22,7 @@ export default {
           "esri/widgets/Home",
           "esri/layers/FeatureLayer",
           "esri/widgets/LayerList",
+          "esri/widgets/Directions",
           // "esri/Basemap",
           // "esri/layers/TileLayer",
         ],
@@ -34,6 +35,7 @@ export default {
             MapView,
             Home,
             FeatureLayer,
+            Directions,
             LayerList,
             // Basemap,
             // TileLayer,
@@ -73,22 +75,25 @@ export default {
             };
             popup.defaultPopupTemplateEnabled = true;
 
-            
-
-            //分别添加三个图层
             var supermarketLayer = new FeatureLayer({
-              url: "https://edutrial.geoscene.cn/geoscene/rest/services/Hosted/%E6%88%90%E9%83%BD%E5%B8%82%E8%B6%85%E5%B8%82%E5%92%8C%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E6%95%B0%E6%8D%AE/FeatureServer/0",
+              url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/0",
             });
             map.add(supermarketLayer);
             var hospitalLayer = new FeatureLayer({
-              url: "https://edutrial.geoscene.cn/geoscene/rest/services/Hosted/%E6%88%90%E9%83%BD%E5%B8%82%E8%B6%85%E5%B8%82%E5%92%8C%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E6%95%B0%E6%8D%AE/FeatureServer/1",
+              url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/1",
             });
             map.add(hospitalLayer);
-            var roadsLayer = new FeatureLayer({
-              url: "https://edutrial.geoscene.cn/geoscene/rest/services/Hosted/%E6%88%90%E9%83%BD%E5%B8%82%E8%B6%85%E5%B8%82%E5%92%8C%E5%8C%BB%E7%96%97%E6%9C%BA%E6%9E%84%E6%95%B0%E6%8D%AE/FeatureServer/2",
+            const directionsWidget = new Directions({
+                routeServiceUrl: "http://43.142.31.47:6080/arcgis/rest/services/C991Network/NAServer/route",
+                /* layers: routeLayer, */
+                // https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World 
+                view: view
             });
 
-            view.ui.remove("attribution");
+            // Add the Directions widget to the top right corner of the view
+            view.ui.add(directionsWidget, {
+                position: "top-right"
+            });
           }
         )
         .catch((e) => {

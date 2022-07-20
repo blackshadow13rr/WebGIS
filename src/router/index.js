@@ -17,6 +17,12 @@ const routes = [
             import ("../views/Login.vue")
     },
     {
+        path: "/register",
+        name: "Register",
+        component: () =>
+            import ("../views/Register.vue")
+    },
+    {
         path: "/Home",
         name: "Home",
         component: () =>
@@ -49,13 +55,19 @@ const routes = [
                 path: "monitor",
                 name: "Monitor",
                 component: () =>
-                    import ("../views/Monitor.vue")
+                    import ("../views/monitor/Monitor.vue")
             },
             {
                 path: "supply",
                 name: "Supply",
                 component: () =>
                     import ("../views/supply/Supply.vue")
+            },
+            {
+                path: "hospital",
+                name: "Hospital",
+                component: () =>
+                    import ("../views/hospital/Hospital.vue")
             }
         ]
     },
