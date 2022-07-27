@@ -64,6 +64,12 @@ const routes = [
                     import ("../views/supply/Supply.vue")
             },
             {
+                path: "order",
+                name: "Order",
+                component: () =>
+                    import ("../views/supply/Order.vue")
+            },
+            {
                 path: "hospital",
                 name: "Hospital",
                 component: () =>
@@ -76,6 +82,12 @@ const routes = [
         name: "Message",
         component: () =>
             import ("../views/Message.vue")
+    },
+    {
+        path: "/TestMap",
+        name: "testMap",
+        component: () =>
+            import ("../function/Map.vue")
     },
 ]
 

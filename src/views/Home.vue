@@ -40,9 +40,9 @@
             </el-icon>
             <span>疫情</span>
           </template>
-            <el-menu-item index="/Home/Monitor">疫情监控</el-menu-item>
-            <el-menu-item index="/Home/Monitor">信息统计</el-menu-item>
-            <el-menu-item index="/Home/Monitor">活动轨迹</el-menu-item>
+          <el-menu-item index="/Home/Monitor">疫情监控</el-menu-item>
+          <el-menu-item index="/Home/Monitor">信息统计</el-menu-item>
+          <el-menu-item index="/Home/Monitor">活动轨迹</el-menu-item>
         </el-sub-menu>
         <el-sub-menu index="map">
           <template #title>
@@ -61,7 +61,7 @@
             </el-icon>
             <span>物资</span>
           </template>
-          <el-menu-item index="/Home/Supply">
+          <el-menu-item index="/Home/Order">
             <span>订单管理</span>
           </el-menu-item>
           <el-menu-item index="/Home/Supply">
@@ -116,8 +116,10 @@
           >
             <el-menu-item index="1" @click="goHome">首页</el-menu-item>
             <el-sub-menu index="2">
-              <template #title>Workspace</template>
-              <el-menu-item index="2-1">item one</el-menu-item>
+              <template #title>功能区</template>
+              <el-menu-item index="2-1" @click="GetBuffer"
+                >覆盖范围查询</el-menu-item
+              >
               <el-menu-item index="2-2">item two</el-menu-item>
               <el-menu-item index="2-3">item three</el-menu-item>
               <el-sub-menu index="2-4">
@@ -207,12 +209,12 @@ export default {
       isLeftMenuCollapse: false,
       activeIndex1: "1",
     });
-    onBeforeMount(() => {
+    /*     onBeforeMount(() => {
             let token = getCookie("token");
             if (!token) {
                 router.push("/login")
             }
-        })
+        }) */
     let GetColor = computed(() => {
       //获取颜色数组
       return $store.getters["getColors"];
@@ -240,6 +242,9 @@ export default {
     let goHome = () => {
       router.push("/Home");
     };
+    let GetBuffer = () => {
+      
+    };
     return {
       ...toRefs(pageInfo),
       currentColor,
@@ -248,6 +253,7 @@ export default {
       ExitLogin,
       gotoMessage,
       goHome,
+      GetBuffer,
     };
   },
 };

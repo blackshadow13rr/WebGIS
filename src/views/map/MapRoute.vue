@@ -21,7 +21,6 @@ export default {
           "esri/views/MapView",
           "esri/widgets/Home",
           "esri/layers/FeatureLayer",
-          "esri/widgets/LayerList",
           "esri/widgets/Directions",
           // "esri/Basemap",
           // "esri/layers/TileLayer",
@@ -36,7 +35,6 @@ export default {
             Home,
             FeatureLayer,
             Directions,
-            LayerList,
             // Basemap,
             // TileLayer,
           ]) => {
@@ -83,14 +81,11 @@ export default {
               url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/1",
             });
             map.add(hospitalLayer);
+
             const directionsWidget = new Directions({
                 routeServiceUrl: "http://43.142.31.47:6080/arcgis/rest/services/C991Network/NAServer/route",
-                /* layers: routeLayer, */
-                // https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World 
                 view: view
             });
-
-            // Add the Directions widget to the top right corner of the view
             view.ui.add(directionsWidget, {
                 position: "top-right"
             });

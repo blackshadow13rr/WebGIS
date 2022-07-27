@@ -1,12 +1,16 @@
 <template>
   <div id="MapView"></div>
+  <div id="delete"><el-button type="primary" :icon="Delete" /><el-icon><Delete /></el-icon></div>
+  
 </template>
 
 <script>
 import { loadModules } from "esri-loader";
 import("../../../public/4.16/esri/themes/light/main.css");
+import{Delete}from "@element-plus/icons-vue";
 export default {
-  name: "Hospital",
+  name: "Order",
+  components:{Delete},
   methods: {
     createView() {
       var options = {
@@ -23,7 +27,6 @@ export default {
           "esri/layers/FeatureLayer",
           "esri/widgets/LayerList",
           "esri/widgets/Search",
-          "esri/geometry/geometryEngine",
           // "esri/Basemap",
           // "esri/layers/TileLayer",
         ],
@@ -38,7 +41,6 @@ export default {
             FeatureLayer,
             LayerList,
             Search,
-            geometryEngine,
             // Basemap,
             // TileLayer,
           ]) => {
@@ -59,6 +61,7 @@ export default {
               view: view,
             });
             view.ui.add(homeBtn, "top-left");
+            view.ui.add("delete", "top-left");
             //弹出窗口
             var popup = view.popup;
             popup.actions = [];
@@ -74,52 +77,34 @@ export default {
               view: view,
               listItemCreatedFunction: (e) => {
                 let item = e.item;
-                if (item.title.match(/.+EmergencyTreatment/g)) {
-                  item.title = "急诊";
-                }
-                if (item.title.match(/.+FeverClinic/g)) {
-                  item.title = "发热门诊";
-                }
-                if (item.title.match(/.+XYhos/g)) {
-                  item.title = "医院";
+                if (item.title.match(/.+XYsm/g)) {
+                  item.title = "超市";
                 }
               },
             });
             view.ui.add(layerList, "bottom-right");
-
             //分别添加图层
-            var EmergencyTreatment = new FeatureLayer({
-              url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/0",
+            var supermarketLayer = new FeatureLayer({
+              url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/3",
             });
-            map.add(EmergencyTreatment);
-            var hospitalLayer = new FeatureLayer({
-              url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/2",
-            });
-            map.add(hospitalLayer);
-            var FeverClinic = new FeatureLayer({
-              url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/1",
-            });
-            map.add(FeverClinic);
+            map.add(supermarketLayer);
             //搜索图层
             var searchWidget = new Search({
-                view: view,
-                sources: [{
-                    layer: new FeatureLayer({
-                        url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/0"
-                    }),
-                    maxResults: 100,
-                }, {
-                    layer: new FeatureLayer({
-                        url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/1"
-                    })
-                }]
-
+              view: view,
+              sources: [
+                {
+                  layer: new FeatureLayer({
+                    url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/3",
+                  }),
+                  maxResults: 100,
+                },
+              ],
             });
             // Adds the search widget below other elements in
             // the top left corner of the view
             view.ui.add(searchWidget, {
-                position: "top-right",
-                index: 2
+              position: "top-right",
+              index: 2,
             });
             //添加动态特效
             let highlight;
@@ -147,9 +132,7 @@ export default {
               let graphic;
               if (
                 response.results.length &&
-                (response.results[0].graphic.layer === supermarketLayer ||
-                  response.results[0].graphic.layer === hospitalLayer ||
-                  response.results[0].graphic.layer === nucleicacidTestLayer)
+                response.results[0].graphic.layer === supermarketLayer
               ) {
                 graphic = response.results[0].graphic;
               }
@@ -169,9 +152,6 @@ export default {
             }
 
             view.ui.remove("attribution");
-
-            //缓冲区
-
           }
         )
         .catch((e) => {
