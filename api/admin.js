@@ -84,3 +84,17 @@ export let Register = async(RegData) => {
     }
     return status;
 }
+
+export let GetOrderList = async() => {
+    let results = await $get("/Map/GetOrderList");
+    return results;
+}
+
+export let GetOrderPoint = async(data) => {
+    let state = data.Ostate
+    let Order = {
+        Ostate: state
+    }
+    let results = await $get("/Map/GetOrderPoint", Order);
+    return results;
+}

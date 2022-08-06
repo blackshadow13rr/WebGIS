@@ -4,14 +4,13 @@
 
 <script>
 import { loadModules } from "esri-loader";
-import("../../../public/4.16/esri/themes/light/main.css");
 export default {
   name: "MapView",
   methods: {
     createView() {
       var options = {
-        url: "https://js.arcgis.com/4.16/init.js",
-        css: "https://js.arcgis.com/4.16/esri/themes/light/main.css",
+        url: "https://js.arcgis.com/4.24/",
+        css: "https://js.arcgis.com/4.24/esri/themes/light/main.css",
       };
 
       loadModules(
@@ -87,30 +86,39 @@ export default {
 
             //分别添加图层
             var supermarketLayer = new FeatureLayer({
-              url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/3",
+              url: "https://localhost:6443/arcgis/rest/services/Point/Point/MapServer/4",
             });
             map.add(supermarketLayer);
             var hospitalLayer = new FeatureLayer({
-              url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/2",
+              url: "https://localhost:6443/arcgis/rest/services/Point/Point/MapServer/3",
             });
             map.add(hospitalLayer);
             var nucleicacidTestLayer = new FeatureLayer({
-              url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/4",
+              url: "https://localhost:6443/arcgis/rest/services/Point/Point/MapServer/2",
             });
             map.add(nucleicacidTestLayer);
             //搜索图层
             var searchWidget = new Search({
                 view: view,
                 sources: [{
-                    layer: new FeatureLayer({
-                        url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/3"
-                    }),
-                    maxResults: 100,
-                }, {
-                    layer: new FeatureLayer({
-                        url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/2"
-                    })
-                }]
+                layer: new FeatureLayer({
+                  url: "https://localhost:6443/arcgis/rest/services/Point/Point/MapServer/4",
+                }),
+                maxResults: 100,
+                name: "超市",
+              },
+              {
+                layer: new FeatureLayer({
+                  url: "https://localhost:6443/arcgis/rest/services/Point/Point/MapServer/3",
+                }),
+                name: "医院",
+              },
+              {
+                layer: new FeatureLayer({
+                  url: "https://localhost:6443/arcgis/rest/services/Point/Point/MapServer/2",
+                }),
+                name: "核酸检测点",
+              },]
 
             });
             // Adds the search widget below other elements in

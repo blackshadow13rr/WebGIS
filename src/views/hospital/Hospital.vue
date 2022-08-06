@@ -4,14 +4,13 @@
 
 <script>
 import { loadModules } from "esri-loader";
-import("../../../public/4.16/esri/themes/light/main.css");
 export default {
   name: "Hospital",
   methods: {
     createView() {
       var options = {
-        url: "https://js.arcgis.com/4.16/init.js",
-        css: "https://js.arcgis.com/4.16/esri/themes/light/main.css",
+        url: "https://js.arcgis.com/4.24/",
+        css: "https://js.arcgis.com/4.24/esri/themes/light/main.css",
       };
 
       loadModules(
@@ -89,30 +88,40 @@ export default {
 
             //分别添加图层
             var EmergencyTreatment = new FeatureLayer({
-              url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/0",
+              url: "https://localhost:6443/arcgis/rest/services/Point/Point/MapServer/1",
             });
             map.add(EmergencyTreatment);
             var hospitalLayer = new FeatureLayer({
-              url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/2",
+              url: "https://localhost:6443/arcgis/rest/services/Point/Point/MapServer/3",
             });
             map.add(hospitalLayer);
             var FeverClinic = new FeatureLayer({
-              url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/1",
+              url: "https://localhost:6443/arcgis/rest/services/Point/Point/MapServer/0",
             });
             map.add(FeverClinic);
             //搜索图层
             var searchWidget = new Search({
                 view: view,
+                includeDefaultSources: false,
                 sources: [{
-                    layer: new FeatureLayer({
-                        url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/0"
-                    }),
-                    maxResults: 100,
-                }, {
-                    layer: new FeatureLayer({
-                        url: "http://43.142.31.47:6080/arcgis/rest/services/C991/MapServer/1"
-                    })
-                }]
+                layer: new FeatureLayer({
+                  url: "https://localhost:6443/arcgis/rest/services/Point/Point/MapServer/0",
+                }),
+                maxResults: 100,
+                name: "发热门诊",
+              },
+              {
+                layer: new FeatureLayer({
+                  url: "https://localhost:6443/arcgis/rest/services/Point/Point/MapServer/3",
+                }),
+                name: "医院",
+              },
+              {
+                layer: new FeatureLayer({
+                  url: "https://localhost:6443/arcgis/rest/services/Point/Point/MapServer/1",
+                }),
+                name: "急诊",
+              },]
 
             });
             // Adds the search widget below other elements in
@@ -147,9 +156,9 @@ export default {
               let graphic;
               if (
                 response.results.length &&
-                (response.results[0].graphic.layer === supermarketLayer ||
+                (response.results[0].graphic.layer === EmergencyTreatment ||
                   response.results[0].graphic.layer === hospitalLayer ||
-                  response.results[0].graphic.layer === nucleicacidTestLayer)
+                  response.results[0].graphic.layer === FeverClinic)
               ) {
                 graphic = response.results[0].graphic;
               }

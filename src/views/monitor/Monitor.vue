@@ -1,19 +1,16 @@
 <template>
-  <div id="Container">
-
-  </div>  
+  <div id="Container"></div>
 </template>
 
 <script>
 import { loadModules } from "esri-loader";
-import("../../../public/4.16/esri/themes/light/main.css");
 export default {
   name: "Monitor",
   methods: {
     createView() {
       var options = {
-        url: "https://js.arcgis.com/4.16/init.js",
-        css: "https://js.arcgis.com/4.16/esri/themes/light/main.css",
+        url: "https://js.arcgis.com/4.24/",
+        css: "https://js.arcgis.com/4.24/esri/themes/light/main.css",
       };
 
       loadModules(
@@ -45,13 +42,6 @@ export default {
             esriConfig.apiKey =
               "AAPK37853f2d8fd242f6ad9df392845bb0855YYrv-aaUh64MrNqmp51tQ6FZBa-YBx9mlRhkoWfEq0QOAMSzDrRbVxMEBBRfVXV";
 
-            // var layer = new TileLayer({
-            //   url: "https://map.geoq.cn/ArcGIS/rest/services/ChinaOnlineStreetGray/MapServer",
-            // });
-            // var customBasemap = new Basemap({
-            //   baselayers: [layer],
-            // });
-
             var map = new Map({
               basemap: "osm",
             });
@@ -77,7 +67,31 @@ export default {
             };
             popup.defaultPopupTemplateEnabled = true;
 
-            
+            var Point = new FeatureLayer({
+              url: "http://43.142.31.47:6080/arcgis/rest/services/epidemicArea/MapServer/0",
+            });
+            map.add(Point);
+            var HighRisk = new FeatureLayer({
+              url: "https://localhost:6443/arcgis/rest/services/Polygon/ChengDuArea/MapServer/1",
+            });
+            map.add(HighRisk);
+
+            var layerList = new LayerList({
+              view: view,
+              listItemCreatedFunction: (e) => {
+                let item = e.item;
+                if (item.title.match(/.+NucleicacidTest/g)) {
+                  item.title = "核酸检测点";
+                }
+                if (item.title.match(/.+XYsm/g)) {
+                  item.title = "超市";
+                }
+                if (item.title.match(/.+XYhos/g)) {
+                  item.title = "医院";
+                }
+              },
+            });
+            view.ui.add(layerList, "bottom-right");
             //添加动态特效
             let highlight;
             let lastUid;
@@ -104,9 +118,8 @@ export default {
               let graphic;
               if (
                 response.results.length &&
-                (response.results[0].graphic.layer === supermarketLayer ||
-                  response.results[0].graphic.layer === hospitalLayer ||
-                  response.results[0].graphic.layer === roadsLayer)
+                (response.results[0].graphic.layer === Point ||
+                  response.results[0].graphic.layer === HighRisk)
               ) {
                 graphic = response.results[0].graphic;
               }

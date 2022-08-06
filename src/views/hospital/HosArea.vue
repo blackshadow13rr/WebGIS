@@ -4,7 +4,6 @@
 
 <script>
 import { loadModules } from "esri-loader";
-import("../../../public/4.16/esri/themes/light/main.css");
 export default {
   name:"HosArea",
   methods:{

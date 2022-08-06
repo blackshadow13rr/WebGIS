@@ -242,9 +242,7 @@ export default {
     let goHome = () => {
       router.push("/Home");
     };
-    let GetBuffer = () => {
-      
-    };
+    let GetBuffer = () => {};
     return {
       ...toRefs(pageInfo),
       currentColor,

@@ -94,6 +94,7 @@ export default {
     //渲染页面表格
     let LoadList = async () => {
       let dt = await GetList();
+      console.log(dt)
       data.tableData = dt;
     };
     LoadList();
