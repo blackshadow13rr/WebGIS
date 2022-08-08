@@ -9,8 +9,6 @@ var jwt = require("jsonwebtoken");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var check = require("./public/javascripts/check");
-
 
 var app = express();
 //处理跨域访问的问题
@@ -22,9 +20,7 @@ app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({
-    extended: false
-}));
+app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -59,7 +55,7 @@ module.exports = app;
 //引用mysql并创建连接池
 const mysql = require("mysql");
 const db = mysql.createConnection({
-    host: "43.142.31.47",
+    host: "127.0.0.1",
     user: "school",
     password: "NWPYskmPbD5yzH7K",
     database: "school",
@@ -112,9 +108,7 @@ app.get("/Role/List", (req, res) => {
 
 app.get("/Role/GetOne", (req, res) => {
     let sql = "select * from rolelist where RUuser = ?";
-    var sqlParams = [req.query["user"]];
-    var latitude = req.query["lat"];
-    var longitude = req.query["lon"];
+    var sqlParams = [req.query["user"]]
     db.query(sql, sqlParams, (e, results) => {
         if (!e) {
             res.send(results);
@@ -168,6 +162,8 @@ app.post("/Role/Update", (req, res) => {
     })
 });
 
+
+
 app.post("/Role/Delete", (req, res) => {
     let sqlParams = [req.body.roleName]
     let sql = "delete from rolelist where Rname = ?"
@@ -185,6 +181,24 @@ app.post("/Role/Delete", (req, res) => {
         }
     })
 })
+
+//分页需要url参数pageSize(每一页的大小)和pageIndex(当前的页码)
+app.get("/Course/List", (req, res) => {
+    let param = {
+        pageSize: 4,
+        pageIndex: 5
+    }
+    let sql = "call GetPage('course', 'id', ?, ?, @pageTotalCount, @lineCount);";
+    let sqlParams = [param.pageSize, param.pageIndex]
+    db.query(sql, sqlParams, (e, results, fields) => {
+        if (!e && results != '') {
+            res.send(results)
+        } else {
+            console.log(e.message);
+        }
+    })
+});
+
 app.post("/Admin/Register", (req, res) => {
     let RegData = {
         username: req.body.loginUser,
@@ -209,7 +223,8 @@ app.post("/Admin/Register", (req, res) => {
         }
     })
 });
-app.get("/Map/GetOrderPoint", (req, res) => {
+
+app.get("/Map/GetOrderList", (req, res) => {
     db.query("select Oid,Oaddress,Ostate from school.order", function(error, results, fields) {
         if (error) {
             console.log(error)
@@ -218,27 +233,13 @@ app.get("/Map/GetOrderPoint", (req, res) => {
         }
     })
 });
-//分页需要url参数pageSize(每一页的大小)和pageIndex(当前的页码)
-app.get("/Course/List", (req, res) => {
-    let param = {
-        pageSize: 4,
-        pageIndex: 5
-    }
-    let sql = "call GetPage('course', 'id', ?, ?, @pageTotalCount, @lineCount);";
-    let sqlParams = [param.pageSize, param.pageIndex]
-    db.query(sql, sqlParams, (e, results, fields) => {
-        if (!e && results != '') {
-            res.send(results)
-        } else {
-            console.log(e.message);
-        }
-    })
-});
 
 app.get("/Map/GetOrderPoint", (req, res) => {
     let data = {
-        Order: req.body,
+        Order: req.query.Ostate,
     }
+    let sqlParams = [data.Order];
+    //data.Order = "进行中"
     db.query("select * from school.order WHERE Ostate = '" + data.Order + "'", function(error, results, fields) {
         if (error) {
             console.log(error)
@@ -248,10 +249,22 @@ app.get("/Map/GetOrderPoint", (req, res) => {
     })
 });
 
-
+app.get("/Map/GetOrderPoint", (req, res) => {
+    let data = {
+        Order: req.query.Ostate,
+    }
+    let sqlParams = [data.Order];
+    //data.Order = "进行中"
+    db.query("select * from school.order WHERE Ostate = '" + data.Order + "'", function(error, results, fields) {
+        if (error) {
+            console.log(error)
+        } else {
+            res.send(results)
+        }
+    })
+});
 
 /********************************************小程序的后台**************************************** */
-
 
 
 
@@ -273,6 +286,7 @@ app.get("/query", (req, res) => {
     })
 });
 
+
 app.get("/order/query", (req, res) => {
     let sql = 'SELECT * FROM school.order;';
     var sqlParams = [];
@@ -284,7 +298,6 @@ app.get("/order/query", (req, res) => {
         }
     })
 })
-
 
 app.get("/order/update", (req, res) => {
     let sql = 'update school.order set Ostate = "进行中" where Oid = ?;';
@@ -298,7 +311,7 @@ app.get("/order/update", (req, res) => {
     })
 })
 
-app.get("/feverClinic/query", (req, res) => {
+app.get("/FeverClinic/query", (req, res) => {
     let sql = "select * from school.feverclinic";
     var sqlParams;
     db.query(sql, sqlParams, (e, results) => {
@@ -346,9 +359,19 @@ app.get("/epidemicArea/query", (req, res) => {
     })
 })
 
-app.get("/map", (req, res) => {
-    res.sendFile(__dirname + "/" + "test.html")
+app.get("/orderdetails/query", (req, res) => {
+    let sql = 'SELECT * FROM school.orderdetails;';
+    var sqlParams = [];
+    db.query(sql, sqlParams, (e, results) => {
+        if (!e) {
+            res.send(results);
+        } else {
+            console.log(e.message);
+        }
+    })
 })
 
 
-/**************************************************************** */
+app.get("/map", (req, res) => {
+    res.sendFile(__dirname + "/" + "test.html")
+})
